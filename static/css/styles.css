@@ -1,0 +1,35 @@
+body {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  background-color: grey;
+}
+
+#boggle_board input {
+  height: 85px;
+  font-size: larger;
+  width: 85px;
+  touch-action: manipulation;
+}
+
+#working_entry {
+  height: 50px;
+  width: 300px;
+  text-align: center;
+}
+
+.selected_input {
+  background-color: green;
+}
+
+.game_hud {
+  text-align: center;
+}
+
+.illegal_selection {
+  background-color: red;
+}
+
+.game_controls {
+  height: 75px;
+  width: 150px;
+  text-align: center;
+}

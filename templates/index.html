@@ -1,0 +1,36 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Boggle Game</title>
+  <meta name="description" content="Fun Word Game">
+  <meta name="author" content="rogueraider">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+               <h1>Welcome to Boggle!</h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <form action="/game_hub">
+                   <label>Please Enter Your User Name</label>
+                   <input name="username" type="text" minlength="5" required class="form-control" aria-label="Sizing example input" placeholder="Username" aria-describedby="inputGroup-sizing-sm">
+                   <label>Please Enter Your Room Name</label>
+                   <input name="room_name" type="text" minlength="5" required class="form-control" aria-label="Sizing example input" placeholder="Room Name" aria-describedby="inputGroup-sizing-sm">
+                    <button type="submit" formmethod="post" class="btn btn-primary btn-lg">START</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
