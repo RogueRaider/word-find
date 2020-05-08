@@ -146,8 +146,7 @@ def send_game_update(game_room):
         },
         Broadcast=True, room=game_room.name)
 
-
+socketio.run(app)
 if __name__ == '__main__':
     # server_game_rooms = game_rooms()
     # socketio.run(app, port=8000, host="0.0.0.0")
-    socketio.run(app)
