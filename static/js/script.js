@@ -10,19 +10,9 @@ const parseCookie = str =>
 set_valid_word_list(english_word_list);
 var lower_thresh = 0.7;
 
-var game = {
-  "state": "waiting",
-  "minimum_letters": 3,
-  "board": {}
-}
-
+var game;
+var player;
 var game_message_handler;
-
-var player = {
-  "entries_numbers": [],
-  "entries_words": []
-}
-
 var working_entry = [];
 
 var legal_letter_add_matrix = {
@@ -50,8 +40,6 @@ $(document).ready(function(){
 
   var cookie = parseCookie(document.cookie);
 
-  game.state = "running"
-
   socket.on('connect', function() {
     data = {
       'username': cookie.username,
@@ -61,24 +49,53 @@ $(document).ready(function(){
   });
 
   socket.on('successful_entry', function(data) {
-    console.log(data)
-    game.board = data.board
-    player = data.player
-    draw_board(game.board)
-    $("#b_username").text(player.username)
+    console.log('sucessful entry result');
+    console.log(data);
+    game_update(data.game);
+    player_update(data.player);
+    $("#b_username").text(data.player.username);
   });
+});
+
+socket.on('player_update', function (data) {
+  player_update(data.player);
+});
+
+socket.on('game_update', function (data) {
+  game_update(data.game);
+});
+
+
+
+socket.on('game_results', function (data) {
+  console.log('received game results');
+  console.log(data);
+  var table_rows;
+  for (var player in data) {
+    var p = data[player];
+    var row = '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
+    table_rows += row;
+    for (var i = p.entries.words.length - 1; i >= 0; i--) {
+      var row = '<tr><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td></tr>';
+      console.log(table_rows);
+      table_rows += row;
+    }
+  }
+  $('#results_table').empty();
+  $('#results_table').html(table_rows);
+  $('#overlay').show();
 });
 
 function b_submit () {
   var submitted_word = $("#working_entry").attr("value").toLowerCase();
   var stringed_working = working_entry.toString()
-  if (player.entries_numbers.includes(stringed_working)) {
+  if (player.entries.numbers.includes(stringed_working)) {
     entry_reset("Already entered '" + submitted_word + "'");
     return;
   }
   var word_check = find_similar(submitted_word, lower_thresh)[0];
   if (word_check.includes(submitted_word)) {
-    player.entries_numbers.push(stringed_working);
+    player.entries.numbers.push(stringed_working);
     entry_reset("Accepted '" + submitted_word + "'");
     socket.emit('submit_word', {
       'entry_word' : submitted_word,
@@ -87,6 +104,26 @@ function b_submit () {
     );
   } else {
     entry_reset("Sorry '" + submitted_word + "' is not a legal word ");
+  }
+}
+
+function b_start () {
+  console.log(game);
+  switch (game.state) {
+    case 'waiting':
+      console.log('Starting game');
+      var game_length = parseInt($('#game_length').children("option:selected").val(), 10)
+      console.log(game_length)
+      socket.emit('game_control', {'game': {
+        'state': 'start',
+        'seconds_remaining': game_length
+      }});
+      break;
+    case 'running':
+      console.log('Game is already running');
+      break;
+    default:
+      console.log('Unknown game state returned')
   }
 }
 
@@ -146,6 +183,34 @@ function check_letter_selection_legal (board_number) {
   var last_number = working_entry[working_entry.length - 1];
   var legal_numbers = legal_letter_add_matrix[last_number];
   return legal_numbers.includes(board_number);
+}
+
+function player_update (player_data) {
+  console.log(player_data)
+  console.log(player_data);
+  player = player_data
+  var table_rows;
+  for (var i = player_data.entries.words.length - 1; i >= 0; i--) {
+    var row = '<tr><td>' + player_data.entries.words[i] + '</td><td class="word_points">' + player_data.entries.points[i] + '</td></tr>';
+    table_rows += row;
+  }
+  $('#submitted_words').empty();
+  $('#submitted_words').html(table_rows);
+}
+
+function game_update (game_data) {
+  console.log('recieved game update');
+  console.log(game_data);
+  game = game_data;
+  $('#clock').text(game.seconds_remaining)
+  draw_board(game.board)
+  if ( game.seconds_remaining == 0 ) {
+    entry_reset("Game is finished")
+  }
+}
+
+function overlay_hide () {
+  $('#overlay').hide();
 }
 
 

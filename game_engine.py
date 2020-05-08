@@ -20,15 +20,36 @@ class player:
     def __init__(self, username):
         self.username = username
         self.sid = None
-        self.entries_numbers = []
-        self.entries_words = []
+        self.entries = {
+            'words': [],
+            'numbers': [],
+            'points': []
+        }
 
 class boggle_room:
     def __init__(self, name):
         self.name = name
         self.players = []
-        self.generate_board()
         self.minimum_letters = 3
+        self.state = 'waiting'
+        self.seconds_remaining = 120
+        self.blank_board = ['-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-',]
+        self.board = self.blank_board
+        self.scoring_matrix  = {
+            3: 1,
+            4: 1,
+            5: 2,
+            6: 3,
+            7: 5,
+            8: 11,
+            9: 11,
+            10: 11,
+            12: 11,
+            13: 11,
+            14: 11,
+            15: 11,
+            16: 100
+        }
 
     def is_player_active(self, player_name):
         for player in self.players:
@@ -47,6 +68,32 @@ class boggle_room:
             if player.sid == player_sid:
                 return player
         return None
+
+    def get_players_final_scores(self):
+        winning_entries = []
+        for player in self.players:
+            for entry in player.entries['numbers']:
+                if entry not in winning_entries:
+                    winning_entries.append(entry)
+                else:
+                    winning_entries.remove(entry)
+        results = {}
+        for player in self.players:
+            results[player.username] = {}
+            results[player.username]['total_points'] = 0
+            results[player.username]['entries'] = {}
+            results[player.username]['entries']['words'] = []
+            results[player.username]['entries']['points'] = []
+            for i in range(0, len(player.entries['numbers'])):
+                if player.entries['numbers'][i] in winning_entries:
+                    results[player.username]['total_points'] += player.entries['points'][i]
+                    results[player.username]['entries']['words'].append(player.entries['words'][i])
+                    results[player.username]['entries']['points'].append(player.entries['points'][i])
+                else:
+                    results[player.username]['entries']['words'].append(player.entries['words'][i])
+                    results[player.username]['entries']['points'].append(0)
+
+        return results
 
     def generate_board(self):
 
