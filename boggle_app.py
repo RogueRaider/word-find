@@ -148,5 +148,6 @@ def send_game_update(game_room):
 
 socketio.run(app)
 if __name__ == '__main__':
+    pass
     # server_game_rooms = game_rooms()
     # socketio.run(app, port=8000, host="0.0.0.0")
