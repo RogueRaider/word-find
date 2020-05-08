@@ -13,8 +13,8 @@ logger = logging.getLogger(__name__)
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aqwerqwer!##$@#@$'
-app.config['ENV'] = 'development'
-app.config['DEBUG'] = True
+# app.config['ENV'] = 'development'
+# app.config['DEBUG'] = True
 socketio = SocketIO(app)
 
 @app.route('/')
@@ -149,4 +149,5 @@ def send_game_update(game_room):
 
 if __name__ == '__main__':
     server_game_rooms = game_rooms()
-    socketio.run(app, port=8000, host="0.0.0.0")
+    # socketio.run(app, port=8000, host="0.0.0.0")
+    socketio.run(app)
