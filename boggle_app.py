@@ -10,7 +10,7 @@ from game_engine import game_rooms, player, boggle_room
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s')
 logger = logging.getLogger(__name__)
 
-
+server_game_rooms = game_rooms()  
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aqwerqwer!##$@#@$'
 # app.config['ENV'] = 'development'
@@ -148,6 +148,6 @@ def send_game_update(game_room):
 
 
 if __name__ == '__main__':
-    server_game_rooms = game_rooms()
+    # server_game_rooms = game_rooms()
     # socketio.run(app, port=8000, host="0.0.0.0")
     socketio.run(app)
