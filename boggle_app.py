@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from pprint import pprint
+# import redis
 import json
 import logging
 import time
@@ -10,12 +11,18 @@ from game_engine import game_rooms, player, boggle_room
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(message)s')
 logger = logging.getLogger(__name__)
 
-server_game_rooms = game_rooms()  
+
+# REDIS_URL = os.environ['REDIS_URL']
+# REDIS_CHAN = 'chat'
+# redis = redis.from_url(REDIS_URL)
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aqwerqwer!##$@#@$'
 # app.config['ENV'] = 'development'
 # app.config['DEBUG'] = True
 socketio = SocketIO(app)
+server_game_rooms = game_rooms()
+
 
 @app.route('/')
 def index():
@@ -146,8 +153,5 @@ def send_game_update(game_room):
         },
         Broadcast=True, room=game_room.name)
 
-socketio.run(app)
 if __name__ == '__main__':
-    pass
-    # server_game_rooms = game_rooms()
-    # socketio.run(app, port=8000, host="0.0.0.0")
+    socketio.run(app)
