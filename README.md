@@ -17,13 +17,13 @@ This submits a POST request which then puts them into the room.
 The username must be unique in the room that was created. If the user leaves then comes back the data must be retained while that room is valid. A user joining multiple times will just broadcast the information.
 
 
-
-
 ## Program flow
 
 * Server start
 * Client connects and logs in
 * Server creates room and player instances
+* Once connection has been established client requests to enter the room
+* If successful the server sends updates to the player and game objects
 * Server sends player data to client
 * Client starts game
 * Server generates game data
@@ -39,10 +39,8 @@ The username must be unique in the room that was created. If the user leaves the
 ## Game flow
 
 1. waiting
-2. start
-3. running
-4. stop
-5. waiting
+2. running
+3. waiting
 
 
 ## Player

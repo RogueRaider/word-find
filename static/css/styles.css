@@ -52,6 +52,14 @@ body {
   background-color: red;
 }
 
+.submit_success {
+  background-color: #28a745;
+}
+
+.submit_fail {
+  background-color: red;
+}
+
 .game_controls {
   height: 75px;
   width: 150px;

@@ -28,6 +28,36 @@
       </table>
     </div>
   </div>
+  <!-- Modal -->
+  <div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Game Settings</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Game length in seconds</p>
+          <select id="game_length">
+            <option value="2">2</option>
+            <option value="20">20</option>
+            <option value="30">30</option>
+            <option value="60">60</option>
+            <option value="120">120</option>
+          </select>
+          <p>Minimum letters allowed</p>
+          <select id="minimum_letters">
+            <option value="3">3</option>
+            <option value="4" selected>4</option>
+          </select>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="container">
     <div class="row">
       <div class="col-sm d-flex justify-content-center">
@@ -36,20 +66,19 @@
     </div>
     <div class="row">
       <div class="col-sm d-flex justify-content-center">
-        <p>Room: {{ room_name }}  Username:<span id="b_username">unkown</span></p>
+        <p>Boogle Room: {{ room_name }}  Username:<span id="b_username">unkown</span></p>
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex flex-column game_hud">
-        <p>Time: <span id="clock">-</span> Minimum Letters: <span>3</span></p>
-        <input id="b_start" type=button value="start" onclick="b_start();">
-        <select id="game_length">
-          <option value="2">2</option>
-          <option value="20">20</option>
-          <option value="30">30</option>
-          <option value="60">60</option>
-          <option value="120">120</option>
-        </select>
+      <div class="col-sm d-flex justify-content-between game_hud">
+        <!-- Trigger the modal with a button -->
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Settings</button>
+        <input id="b_start" type=button value="Start!" class="btn btn-sm btn-success"onclick="b_start();">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm d-flex justify-content-center">
+        <p>Time Remaining: <span id="clock">-</span></p>
       </div>
     </div>
     <div class="row">

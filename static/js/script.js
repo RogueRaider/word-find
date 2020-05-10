@@ -45,17 +45,11 @@ $(document).ready(function(){
       'username': cookie.username,
       'room': cookie.room
     };
+
     socket.emit('entering_room', data);
   });
-
-  socket.on('successful_entry', function(data) {
-    console.log('sucessful entry result');
-    console.log(data);
-    game_update(data.game);
-    player_update(data.player);
-    $("#b_username").text(data.player.username);
-  });
 });
+
 
 socket.on('player_update', function (data) {
   player_update(data.player);
@@ -65,24 +59,20 @@ socket.on('game_update', function (data) {
   game_update(data.game);
 });
 
-
-
 socket.on('game_results', function (data) {
   console.log('received game results');
   console.log(data);
-  var table_rows;
   for (var player in data) {
     var p = data[player];
-    var row = '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
-    table_rows += row;
+    var resutls_table = '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
     for (var i = p.entries.words.length - 1; i >= 0; i--) {
       var row = '<tr><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td></tr>';
-      console.log(table_rows);
-      table_rows += row;
+      console.log(resutls_table);
+      resutls_table += row;
     }
   }
   $('#results_table').empty();
-  $('#results_table').html(table_rows);
+  $('#results_table').html(resutls_table);
   $('#overlay').show();
 });
 
@@ -95,6 +85,10 @@ function b_submit () {
   }
   var word_check = find_similar(submitted_word, lower_thresh)[0];
   if (word_check.includes(submitted_word)) {
+    $("#working_entry").toggleClass("submit_success");
+    setTimeout( function () {
+      $("#working_entry").toggleClass("submit_success");
+    }, 1000);
     player.entries.numbers.push(stringed_working);
     entry_reset("Accepted '" + submitted_word + "'");
     socket.emit('submit_word', {
@@ -103,20 +97,27 @@ function b_submit () {
       }
     );
   } else {
+    $("#working_entry").toggleClass("submit_fail");
+    setTimeout( function () {
+      $("#working_entry").toggleClass("submit_fail");
+    }, 1000);
     entry_reset("Sorry '" + submitted_word + "' is not a legal word ");
   }
 }
 
 function b_start () {
+  console.log('requesting game start')
   console.log(game);
   switch (game.state) {
     case 'waiting':
       console.log('Starting game');
       var game_length = parseInt($('#game_length').children("option:selected").val(), 10)
-      console.log(game_length)
+      var minimum_letters = parseInt($('#minimum_letters').children("option:selected").val(), 10)
+      console.log(minimum_letters)
       socket.emit('game_control', {'game': {
         'state': 'start',
-        'seconds_remaining': game_length
+        'seconds_remaining': game_length,
+        'minimum_letters': minimum_letters
       }});
       break;
     case 'running':
@@ -186,7 +187,7 @@ function check_letter_selection_legal (board_number) {
 }
 
 function player_update (player_data) {
-  console.log(player_data)
+  console.log('updating player')
   console.log(player_data);
   player = player_data
   var table_rows;
@@ -194,12 +195,13 @@ function player_update (player_data) {
     var row = '<tr><td>' + player_data.entries.words[i] + '</td><td class="word_points">' + player_data.entries.points[i] + '</td></tr>';
     table_rows += row;
   }
+  $("#b_username").text(player_data.username);
   $('#submitted_words').empty();
   $('#submitted_words').html(table_rows);
 }
 
 function game_update (game_data) {
-  console.log('recieved game update');
+  console.log('updating game');
   console.log(game_data);
   game = game_data;
   $('#clock').text(game.seconds_remaining)

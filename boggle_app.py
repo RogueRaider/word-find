@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, make_response
 from flask_socketio import SocketIO, join_room, leave_room, send, emit
 from pprint import pprint
-# import redis
+
 import json
 import logging
 import time
@@ -12,15 +12,13 @@ logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(levelname)s:%(mes
 logger = logging.getLogger(__name__)
 
 
-# REDIS_URL = os.environ['REDIS_URL']
-# REDIS_CHAN = 'chat'
-# redis = redis.from_url(REDIS_URL)
-
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aqwerqwer!##$@#@$'
-# app.config['ENV'] = 'development'
-# app.config['DEBUG'] = True
+app.config['ENV'] = 'development'
+app.config['DEBUG'] = True
+
 socketio = SocketIO(app)
+
 server_game_rooms = game_rooms()
 
 
@@ -50,6 +48,23 @@ def game_hub():
     resp.set_cookie("room", p_room_name)
     return resp
 
+@socketio.on('connect')
+def connection_message():
+    logger.debug("new players are connecting")
+
+@socketio.on('disconnect')
+def disconnect_housekeepting():
+    logger.debug(f'disconnect detected from {request.sid}')
+    for x, room in enumerate(server_game_rooms.active_rooms):
+        for y, player in enumerate(room.players):
+            if player.sid == request.sid:
+                logger.info(f'Removing {player.username} from {room.name}')
+                del room.players[y]
+        if len(room.players) == 0:
+            logger.info(f'Removing empty room {room.name}')
+            del server_game_rooms.active_rooms[x]
+
+
 @socketio.on('entering_room')
 def enter_room(data):
     p_username = data['username']
@@ -67,21 +82,14 @@ def enter_room(data):
         player_selected.sid = request.sid
         logger.debug(f'Updated {player_selected.username} with sid {request.sid}')
         logger.debug(f'Game state {boggle_r.state} game board {boggle_r.board}')
-        emit('successful_entry', {
-            'game' : {
-                'state': boggle_r.state,
-                'board': boggle_r.board,
-                'minimum_letters': boggle_r.minimum_letters
-                },
-            'player': player_selected.__dict__ } )    
-
-@socketio.on('connect')
-def connection_message():
-    print("Welcome new players")
+        emit('player_update', {
+            'player': player_selected.__dict__
+            })
+        send_game_update(boggle_r, player_selected.sid) 
 
 @socketio.on('game_control')
 def handle_control_input(data):
-    pprint(data)
+    logger.debug(f'Received control request{data}')
     game = data['game']
     p_room_name = request.cookies['room']
     if server_game_rooms.is_room_active( p_room_name , boggle_room ):
@@ -91,13 +99,13 @@ def handle_control_input(data):
         return
     if game['state'] == 'start':
         boggle_r.seconds_remaining = game['seconds_remaining']
+        boggle_r.minimum_letters = game['minimum_letters']
         run_game(boggle_r)
 
 
 @socketio.on('submit_word')
 def process_word(word):
-    logger.debug("Submited word received " + str(word))
-    pprint(request.cookies['room'])
+    logger.debug("Submitted word received " + str(word))
     p_room_name = request.cookies['room']
     p_sid = request.sid
 
@@ -116,10 +124,16 @@ def process_word(word):
         'player': player_selected.__dict__
         })
 
+
 def run_game(game_room):
     game_room.generate_board()
     game_room.state = 'running'
     send_game_update(game_room)
+
+    for player in game_room.players:
+        emit('player_update', { 
+            'player': player.__dict__
+            }, room=player.sid)
 
     end_time = time.time() + game_room.seconds_remaining
     while time.time() < end_time:
@@ -142,16 +156,28 @@ def run_game(game_room):
     send_game_update(game_room)
     socketio.emit('game_results', game_results, Broadcast=True, room=game_room.name)
 
-def send_game_update(game_room):
-    socketio.emit('game_update', {
-        'game' : {
-            'state': game_room.state,
-            'board': game_room.board,
-            'minimum_letters': game_room.minimum_letters,
-            'seconds_remaining': game_room.seconds_remaining
-            }
-        },
-        Broadcast=True, room=game_room.name)
+
+def send_game_update(game_room, sid=None):
+    if sid is None:
+        socketio.emit('game_update', {
+            'game' : {
+                'state': game_room.state,
+                'board': game_room.board,
+                'minimum_letters': game_room.minimum_letters,
+                'seconds_remaining': game_room.seconds_remaining
+                }
+            },
+            room=sid)
+    else:
+        socketio.emit('game_update', {
+            'game' : {
+                'state': game_room.state,
+                'board': game_room.board,
+                'minimum_letters': game_room.minimum_letters,
+                'seconds_remaining': game_room.seconds_remaining
+                }
+            },
+            Broadcast=True, room=game_room.name)
 
 if __name__ == '__main__':
-    socketio.run(app)
+    socketio.run(app, port=8000)
