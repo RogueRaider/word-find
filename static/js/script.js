@@ -73,7 +73,7 @@ socket.on('game_results', function (data) {
   }
   $('#results_table').empty();
   $('#results_table').html(results_table);
-  $('#overlay').show();
+  $('#results-modal').modal('show');
 });
 
 function b_submit () {

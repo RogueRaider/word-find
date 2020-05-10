@@ -15,21 +15,28 @@
 </head>
 
 <body>
-  <div id="overlay" class="container" ondblclick="overlay_hide()">
-    <div class="row d-flex justify-content-center">
-      <table>
-        <thead>
-          <tr>
-            <td>Results Table</td>
-          </tr>
-        </thead>
-        <tbody id="results_table">
-        </tbody>
-      </table>
+  <div id="results-modal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+      <!-- Modal content-->
+      <div class="modal-content">
+        <div class="modal-header">
+          <h4 class="modal-title">Results</h4>
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        </div>
+        <div class="row d-flex justify-content-center">
+          <table>
+            <tbody id="results_table">
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
   <!-- Modal -->
-  <div id="myModal" class="modal fade" role="dialog">
+  <div id="settings-modal" class="modal fade" role="dialog">
     <div class="modal-dialog">
       <!-- Modal content-->
       <div class="modal-content">
@@ -72,7 +79,7 @@
     <div class="row">
       <div class="col-sm d-flex justify-content-between game_hud">
         <!-- Trigger the modal with a button -->
-        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#myModal">Settings</button>
+        <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#settings-modal">Settings</button>
         <input id="b_start" type=button value="Start!" class="btn btn-sm btn-success"onclick="b_start();">
       </div>
     </div>
