@@ -7,9 +7,6 @@ const parseCookie = str =>
       return acc;
     }, {});
 
-set_valid_word_list(english_word_list);
-var lower_thresh = 0.7;
-
 var game;
 var player;
 var game_message_handler;
@@ -36,6 +33,8 @@ var legal_letter_add_matrix = {
 
 var socket = io();
 
+var dictionary = new Typo("en_GB", false, false, { dictionaryPath: "static/js/dictionaries", asyncLoad: true, loadedCallback: function(data) { console.log("dictionary ready");}} );
+
 $(document).ready(function(){
 
   var cookie = parseCookie(document.cookie);
@@ -47,6 +46,7 @@ $(document).ready(function(){
     };
 
     socket.emit('entering_room', data);
+
   });
 });
 
@@ -62,17 +62,17 @@ socket.on('game_update', function (data) {
 socket.on('game_results', function (data) {
   console.log('received game results');
   console.log(data);
+  var results_table = "";
   for (var player in data) {
     var p = data[player];
-    var resutls_table = '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
+    results_table += '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
     for (var i = p.entries.words.length - 1; i >= 0; i--) {
       var row = '<tr><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td></tr>';
-      console.log(resutls_table);
-      resutls_table += row;
+      results_table += row;
     }
   }
   $('#results_table').empty();
-  $('#results_table').html(resutls_table);
+  $('#results_table').html(results_table);
   $('#overlay').show();
 });
 
@@ -83,8 +83,7 @@ function b_submit () {
     entry_reset("Already entered '" + submitted_word + "'");
     return;
   }
-  var word_check = find_similar(submitted_word, lower_thresh)[0];
-  if (word_check.includes(submitted_word)) {
+  if (dictionary.check(submitted_word)) {
     $("#working_entry").toggleClass("submit_success");
     setTimeout( function () {
       $("#working_entry").toggleClass("submit_success");
@@ -205,6 +204,8 @@ function game_update (game_data) {
   console.log(game_data);
   game = game_data;
   $('#clock').text(game.seconds_remaining)
+  $('#minimum_letters').val(game.minimum_letters)
+  $('#game_length').val(game.length_seconds)
   draw_board(game.board)
   if ( game.seconds_remaining == 0 ) {
     entry_reset("Game is finished")

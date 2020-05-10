@@ -30,9 +30,10 @@ class boggle_room:
     def __init__(self, name):
         self.name = name
         self.players = []
-        self.minimum_letters = 3
+        self.minimum_letters = 4
         self.state = 'waiting'
-        self.seconds_remaining = 120
+        self.length_seconds = 120
+        self.seconds_remaining = self.length_seconds
         self.blank_board = ['-','-','-','-','-','-','-','-','-','-','-','-','-','-','-','-',]
         self.board = self.blank_board
         self.scoring_matrix  = {

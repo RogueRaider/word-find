@@ -98,6 +98,7 @@ def handle_control_input(data):
         logger.error(f"Could not find instance of room '{p_room_name}' to start")
         return
     if game['state'] == 'start':
+        boggle_r.length_seconds  = game['seconds_remaining']
         boggle_r.seconds_remaining = game['seconds_remaining']
         boggle_r.minimum_letters = game['minimum_letters']
         run_game(boggle_r)
@@ -164,7 +165,8 @@ def send_game_update(game_room, sid=None):
                 'state': game_room.state,
                 'board': game_room.board,
                 'minimum_letters': game_room.minimum_letters,
-                'seconds_remaining': game_room.seconds_remaining
+                'seconds_remaining': game_room.seconds_remaining,
+                'length_seconds': game_room.length_seconds
                 }
             },
             room=sid)
@@ -174,7 +176,8 @@ def send_game_update(game_room, sid=None):
                 'state': game_room.state,
                 'board': game_room.board,
                 'minimum_letters': game_room.minimum_letters,
-                'seconds_remaining': game_room.seconds_remaining
+                'seconds_remaining': game_room.seconds_remaining,
+                'length_seconds': game_room.length_seconds
                 }
             },
             Broadcast=True, room=game_room.name)
