@@ -155,7 +155,7 @@ def run_game(game_room):
     game_room.state = 'waiting'
     game_room.seconds_remaining = 0
     send_game_update(game_room)
-    socketio.emit('game_results', game_results, Broadcast=True, room=game_room.name)
+    socketio.emit('game_results', game_results, room=game_room.name)
 
 
 def send_game_update(game_room, sid=None):
@@ -180,7 +180,7 @@ def send_game_update(game_room, sid=None):
                 'length_seconds': game_room.length_seconds
                 }
             },
-            Broadcast=True, room=game_room.name)
+            room=game_room.name)
 
 if __name__ == '__main__':
     socketio.run(app, port=8000)
