@@ -3,7 +3,13 @@ body {
   background-color: grey;
 }
 
+form {
+  text-align: center;
+}
+
+
 #boggle_board input {
+  margin: 5px;
   height: 85px;
   font-size: larger;
   width: 85px;
@@ -38,6 +44,12 @@ body {
   background-color: blue;
   z-index: 2;
   cursor: pointer;
+}
+
+.container-fluid {
+  margin-right: auto;
+  margin-left: auto;
+  max-width: 400px; /* or 950px */
 }
 
 .selected_input {

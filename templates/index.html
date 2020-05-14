@@ -26,8 +26,8 @@
                    <label>Please Enter Your User Name</label>
                    <input name="username" type="text" minlength="5" required class="form-control" aria-label="Sizing example input" placeholder="Username" aria-describedby="inputGroup-sizing-sm">
                    <label>Please Enter Your Room Name</label>
-                   <input name="room_name" type="text" minlength="5" required class="form-control" aria-label="Sizing example input" placeholder="Room Name" aria-describedby="inputGroup-sizing-sm">
-                    <button type="submit" formmethod="post" class="btn btn-primary btn-lg">START</button>
+                   <input name="room_name" type="text" minlength="4" maxlength="8" pattern="[A-Za-z0-9-]+" required class="form-control" aria-label="Sizing example input" placeholder="Room Name" aria-describedby="inputGroup-sizing-sm">
+                    <button type="submit" formmethod="post" class="btn btn-success btn-lg">ENTER</button>
                 </form>
             </div>
         </div>

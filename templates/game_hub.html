@@ -65,31 +65,32 @@
       </div>
     </div>
   </div>
-  <div class="container">
+  <div class="container-fluid">
     <div class="row">
-      <div class="col-sm d-flex justify-content-center">
+      <div class="col d-flex justify-content-center">
         <h4>Welcome to Boggle!</h4>
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-center">
+      <div class="col d-flex justify-content-center">
         <p>Boogle Room: {{ room_name }}  Username:<span id="b_username">unkown</span></p>
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-between game_hud">
+      <div class="col d-flex justify-content-between">
         <!-- Trigger the modal with a button -->
         <button type="button" class="btn btn-info btn-sm" data-toggle="modal" data-target="#settings-modal">Settings</button>
+        <p>Time Remaining: <span id="clock">-</span></p>
         <input id="b_start" type=button value="Start!" class="btn btn-sm btn-success"onclick="b_start();">
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-center">
-        <p>Time Remaining: <span id="clock">-</span></p>
+      <div class="col d-flex justify-content-center">
+       
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-center">
+      <div class="col d-flex justify-content-center">
       <table id="boggle_board">
         <tbody>
           <tr>
@@ -153,14 +154,14 @@
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex flex-column game_hud">
+      <div class="col d-flex flex-column">
         <div class="d-flex justify-content-center">
           <input id="working_entry" type="text" disabled="true">
         </div>
       </div>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-between">
+      <div class="col d-flex justify-content-between">
         <input id="b_reset" class="game_controls" type="button" value="Reset"  onclick="b_reset();">
         <input id="b_submit" class="game_controls" type="button" value="Submit" disabled onclick="b_submit();">
       </div>
@@ -169,7 +170,7 @@
         <p>Message:<span id="game_message"></span></p>
     </div>
     <div class="row">
-      <div class="col-sm d-flex justify-content-center">
+      <div class="col d-flex justify-content-center">
         <table>
           <thead>
             <tr>
