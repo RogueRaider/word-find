@@ -132,7 +132,7 @@ def run_game(game_room):
     send_game_update(game_room)
 
     for player in game_room.players:
-        emit('player_update', { 
+        socketio.emit('player_update', { 
             'player': player.__dict__
             }, room=player.sid)
 
@@ -142,8 +142,12 @@ def run_game(game_room):
         logger.debug(f'Seconds remaining {game_room.seconds_remaining} for {game_room.name}')
         send_game_update(game_room)
         time.sleep(1)
+        
+    logger.debug(f'Sending last game update')
+    send_game_update(game_room)
     game_results = game_room.get_players_final_scores()
-    logger.debug(game_results)
+    logger.debug(f'Sending game results {game_results}')
+    socketio.emit('game_results', game_results, room=game_room.name)
     # reset game
     for player in game_room.players:
         player.entries = {
@@ -154,13 +158,14 @@ def run_game(game_room):
     game_room.board = game_room.blank_board
     game_room.state = 'waiting'
     game_room.seconds_remaining = 0
+    logger.debug(f'Sending reset game room')
     send_game_update(game_room)
-    socketio.emit('game_results', game_results, room=game_room.name)
+
 
 
 def send_game_update(game_room, sid=None):
-    if sid is None:
-        socketio.emit('game_update', {
+    if sid is not None:
+        emit('game_update', {
             'game' : {
                 'state': game_room.state,
                 'board': game_room.board,
@@ -171,7 +176,7 @@ def send_game_update(game_room, sid=None):
             },
             room=sid)
     else:
-        socketio.emit('game_update', {
+        emit('game_update', {
             'game' : {
                 'state': game_room.state,
                 'board': game_room.board,
