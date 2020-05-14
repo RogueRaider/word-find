@@ -165,7 +165,7 @@ function update_working_entry (board_number) {
     working_entry_string += game.board[working_entry[i]];
   }
   $("#working_entry").attr("value", working_entry_string);
-  if ( working_entry.length >= game.minimum_letters ) {
+  if ( working_entry_string.length >= game.minimum_letters ) {
     $("#b_submit").removeAttr("disabled");
   }
 
@@ -211,11 +211,6 @@ function game_update (game_data) {
     entry_reset("Game is finished")
   }
 }
-
-function overlay_hide () {
-  $('#overlay').hide();
-}
-
 
 function draw_board (board) {
   for (var i = board.length - 1; i >= 0; i--) {
