@@ -21,8 +21,8 @@ The username must be unique in the room that was created. If the user leaves the
 
 * Server start
 * Client connects and logs in
-* Server creates room and player instances
 * Once connection has been established client requests to enter the room
+* Server creates room and player instances
 * If successful the server sends updates to the player and game objects
 * Server sends player data to client
 * Client starts game
@@ -48,3 +48,26 @@ The username must be unique in the room that was created. If the user leaves the
 The player properties
 `entries_numbers` used to store js arrays that have been converted to numbers. This is used to make sure each entry is unique.
 `entries_words` used to store entered words as simple readable strings
+
+
+## Managing connection issues
+
+Managing connections with phones is a little tricky. Phone go into standby
+very quickly causing socketio to disconnect. We don't know if/when they will
+reconnect so it is difficult to know when they should be removed from the
+room.
+
+When the phone screen goes blank while waiting the disconnect event is fired.
+Then the phone continues to reconnect every few minutes. The SID of the
+player continually changes.
+
+Players complete a post request using the index page form. This sets up the
+cookie with the 'username' and 'room' keys allowing the connection to
+socektio.
+
+Players are added to the server python room instances only through the
+"entering_room" socketio message. This attempts to keep the player instances in
+sync with the socketio messages.
+
+If the players try to connect to rooms that don't exist they are sent back to
+the index page.
