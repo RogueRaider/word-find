@@ -85,14 +85,18 @@ class boggle_room:
             results[player.username]['entries'] = {}
             results[player.username]['entries']['words'] = []
             results[player.username]['entries']['points'] = []
+            results[player.username]['entries']['numbers'] = []
             for i in range(0, len(player.entries['numbers'])):
                 if player.entries['numbers'][i] in winning_entries:
                     results[player.username]['total_points'] += player.entries['points'][i]
                     results[player.username]['entries']['words'].append(player.entries['words'][i])
                     results[player.username]['entries']['points'].append(player.entries['points'][i])
+                    results[player.username]['entries']['numbers'].append(player.entries['numbers'][i])
                 else:
                     results[player.username]['entries']['words'].append(player.entries['words'][i])
                     results[player.username]['entries']['points'].append(0)
+                    results[player.username]['entries']['numbers'].append(player.entries['numbers'][i])
+                    
 
         return results
 
