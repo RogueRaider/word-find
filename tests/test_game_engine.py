@@ -1,3 +1,5 @@
+# Tests can be run from the project root with 'python3 -m unittest discover'
+
 import unittest
 from game_engine import game_rooms, player, boggle_room
 
@@ -60,9 +62,31 @@ class TestBoggleRoomMethods(unittest.TestCase):
             'points': [5]
         }
 
-        test_case = {'acacia': {'entries': {'points': [0, 1, 10],'words': ['figs','figs','spaceship', ]},'total_points': 11},
-                     'matthew': {'entries': {'points': [5], 'words': ['bedroom']}, 'total_points': 5},
-                     'rodney': {'entries': {'points': [0, 2], 'words': ['figs', 'apples',]},'total_points': 2}}
+        test_case = {'acacia': {
+                        'entries': {
+                            'points': [0, 1, 10],
+                            'words': ['figs','figs','spaceship', ],
+                            'numbers': ['1,2,3,4', '1,3,4,2', '5,4,3,6,2,1,5,3,4']
+                            },
+                        'total_points': 11
+                        },
+                     'matthew': {
+                        'entries': {
+                            'points': [5], 
+                            'words': ['bedroom'],
+                            'numbers': ['4,5,6,7,2,10,11']
+                            }, 
+                        'total_points': 5
+                        },
+                     'rodney': {
+                        'entries': {
+                            'points': [0, 2], 
+                            'words': ['figs', 'apples'],
+                            'numbers': ['1,2,3,4', '4,5,2,4,8,16']
+                            },
+                        'total_points': 2
+                        }
+                    }
 
 
         self.assertEqual(test_case, br.get_players_final_scores())
