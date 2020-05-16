@@ -67,7 +67,7 @@ socket.on('game_results', function (data) {
     var p = data[player];
     results_table += '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
     for (var i = p.entries.words.length - 1; i >= 0; i--) {
-      var row = '<tr><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td></tr>';
+      var row = '<tr class="result_row"><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td><td>' + p.entries.numbers[i] + '</td></tr>';
       results_table += row;
     }
   }
@@ -75,6 +75,12 @@ socket.on('game_results', function (data) {
   $('#results_table').html(results_table);
   $('#results-modal').modal('show');
 });
+
+socket.on('room_closed', function (data) {
+  console.log('The room is closed, redirecting to room entry');
+  alert('Sorry, the room is closed. Please start again.');
+  window.location.replace('/');
+})
 
 function b_submit () {
   var submitted_word = $("#working_entry").attr("value").toLowerCase();
@@ -207,6 +213,11 @@ function game_update (game_data) {
   $('#minimum_letters').val(game.minimum_letters)
   $('#game_length').val(game.length_seconds)
   draw_board(game.board)
+  if ( game.state == "running" ) {
+    $("#b_start").prop("disabled", true);
+  } else {
+    $('#b_start').removeAttr("disabled");
+  }
   if ( game.seconds_remaining == 0 ) {
     entry_reset("Game is finished")
   }
