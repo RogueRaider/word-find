@@ -42,7 +42,6 @@ def game_hub():
         logger.info(f"Player {p_username} is reconnecting to session for {p_room_name}")
     else:
         logger.info(f"Player {p_username} is joining session for {p_room_name}")
-        boggle_r.players.append(player(p_username))
     resp = make_response(render_template('game_hub.html', room_name=p_room_name))
     resp.set_cookie("username", p_username)
     resp.set_cookie("room", p_room_name)
@@ -50,14 +49,14 @@ def game_hub():
 
 @socketio.on('connect')
 def connection_message():
-    logger.debug("new players are connecting")
+    logger.debug("new connection established")
 
 @socketio.on('disconnect')
 def disconnect_housekeepting():
     logger.debug(f'disconnect detected from {request.sid}')
     for x, room in enumerate(server_game_rooms.active_rooms):
         for y, player in enumerate(room.players):
-            if player.sid == request.sid:
+            if player.sid == request.sid: # and check that game isn't running
                 logger.info(f'Removing {player.username} from {room.name}')
                 del room.players[y]
         if len(room.players) == 0:
@@ -76,27 +75,40 @@ def enter_room(data):
         join_room(p_room_name)
     else:
         logger.error(f"Could not find instance of room '{p_room_name}' for player '{p_username}' to enter")
+        emit('room_closed')
         return
-    if boggle_r.is_player_active(p_username):        
-        player_selected = boggle_r.get_player(p_username)
-        player_selected.sid = request.sid
-        logger.debug(f'Updated {player_selected.username} with sid {request.sid}')
-        logger.debug(f'Game state {boggle_r.state} game board {boggle_r.board}')
-        emit('player_update', {
-            'player': player_selected.__dict__
-            })
-        send_game_update(boggle_r, player_selected.sid) 
+
+    if not boggle_r.is_player_active(p_username):
+        logger.debug(f'Creating new player "{p_username}"')
+        boggle_r.players.append(player(p_username))
+
+    player_selected = boggle_r.get_player(p_username)
+    player_selected.sid = request.sid
+    logger.debug(f'Updated {player_selected.username} with sid {request.sid}')
+    logger.debug(f'Game state {boggle_r.state} game board {boggle_r.board}')
+    emit('player_update', {
+        'player': player_selected.__dict__
+        })
+    send_game_update(boggle_r, player_selected.sid)
+
 
 @socketio.on('game_control')
 def handle_control_input(data):
     logger.debug(f'Received control request{data}')
+
     game = data['game']
     p_room_name = request.cookies['room']
-    if server_game_rooms.is_room_active( p_room_name , boggle_room ):
-        boggle_r = server_game_rooms.get_room(p_room_name, boggle_room)
-    else:
+    if not server_game_rooms.is_room_active( p_room_name , boggle_room ):
         logger.error(f"Could not find instance of room '{p_room_name}' to start")
+        emit('room_closed')
         return
+
+    boggle_r = server_game_rooms.get_room(p_room_name, boggle_room)
+
+    if boggle_r.state == 'running':
+        logger.error(f'Can not start game that is already running')
+        return
+
     if game['state'] == 'start':
         boggle_r.length_seconds  = game['seconds_remaining']
         boggle_r.seconds_remaining = game['seconds_remaining']
