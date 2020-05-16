@@ -13,7 +13,7 @@ form {
 
 #boggle_board input {
   height: 85px;
-  font-size: larger;
+  font-size: xx-large;
   width: 85px;
   touch-action: manipulation;
 }
@@ -32,6 +32,20 @@ form {
   border-top-width: 5px;
   border-top-style: solid;
   border-top-color: black;
+}
+
+.result_section td {
+  padding-right: 5px;
+  padding-left: 10px;
+}
+
+.result_row {
+  border: 1px solid black;
+}
+
+.result_row td {
+  padding-right: 5px;
+  padding-left: 10px;
 }
 
 #overlay {
