@@ -72,12 +72,17 @@ class boggle_room:
 
     def get_players_final_scores(self):
         winning_entries = []
+        losing_entries = []
         for player in self.players:
             for entry in player.entries['numbers']:
-                if entry not in winning_entries:
-                    winning_entries.append(entry)
-                else:
+                # entry gets no points because it's duplicated
+                if entry in winning_entries: 
                     winning_entries.remove(entry)
+                    losing_entries.append(entry)
+                # entry is not duplicated and has not been previously removed    
+                elif entry not in losing_entries: 
+                    winning_entries.append(entry)
+
         results = {}
         for player in self.players:
             results[player.username] = {}

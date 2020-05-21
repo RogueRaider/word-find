@@ -36,7 +36,7 @@ class TestBoggleRoomMethods(unittest.TestCase):
         self.assertEqual(16, len(br.board))
 
     def test_get_players_final_scores(self):
-        br = boggle_room("12345")
+        br = boggle_room("test01")
         br.players.append(player("matthew"))
         br.players.append(player("rodney"))
         br.players.append(player("acacia"))
@@ -62,7 +62,8 @@ class TestBoggleRoomMethods(unittest.TestCase):
             'points': [5]
         }
 
-        test_case = {'acacia': {
+        test_case_01 = {
+                      'acacia': {
                         'entries': {
                             'points': [0, 1, 10],
                             'words': ['figs','figs','spaceship', ],
@@ -88,5 +89,125 @@ class TestBoggleRoomMethods(unittest.TestCase):
                         }
                     }
 
+        self.assertEqual(test_case_01, br.get_players_final_scores())
 
-        self.assertEqual(test_case, br.get_players_final_scores())
+        self.maxDiff = None
+        br02 = boggle_room("test02")
+        br02.players.append(player("Rodney"))
+        br02.players.append(player("Paula"))
+        br02.players.append(player("johnf"))
+        br02.players.append(player("RUBEUS"))
+        br02.players.append(player("Mark"))
+        br02.players.append(player("Kendall"))
+        br02.players.append(player("Rache"))
+
+        Rodney = br02.get_player("Rodney")
+        Paula = br02.get_player("Paula")
+        JohnF = br02.get_player("johnf")
+        Rubeus = br02.get_player("RUBEUS")
+        Mark = br02.get_player("Mark")
+        Kendall = br02.get_player("Kendall")
+        Rachel = br02.get_player("Rache")
+
+        Rodney.entries = {
+                "words": [ "hat", "ton", "ton", "than", "sad", "sad", "sat", "vat", "tan", "tan"],
+                "points": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+                "numbers": ["0,5,4", "4,8,9", "4,8,13", "4,0,5,9", "2,5,1", "2,5,6", "7,10,14", "15,10,14", "14,10,9", "14,10,13"]
+              }
+ 
+        Paula.entries = {
+                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "tan", "tan", "van"],
+                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "14,10,9", "14,10,13", "15,10,9"]
+              }
+
+        JohnF.entries = {
+                "words": ["tad", "hat"],
+                "points": [1, 1 ],
+                "numbers": ["4,5,6", "0,5,4"]
+              }
+
+        Rubeus.entries = {
+                "words": ["sat", "sands", "sand", "hand", "hands", "hands", "tan", "tan", "tan", "ton", "ton"],
+                "points": [1, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1 ],
+                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,7", "0,5,9,6,2", "14,10,13", "14,10,9", "4,5,9", "4,8,9", "4,8,13"]
+              }
+
+        Mark.entries = {
+                "words": ["not"],
+                "points": [1 ],
+                "numbers": ["9,8,4"]
+              }
+
+        Rachel.entries = {
+                "words": ["tan", "tan", "van", "van", "sat", "has", "hat", "had", "hast"],
+                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+                "numbers": ["14,10,9", "14,10,13", "15,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
+              }
+
+        Kendall.entries = {
+                "words": ["dad", "dads", "dads", "ant", "not", "not", "nor", "sat", "vat", "van", "van", "hat", "toad"],
+                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
+                "numbers": ["1,5,6", "1,5,6,2", "1,5,6,7", "5,9,4", "13,8,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,13", "15,10,9", "0,5,4", "4,8,5,6"]
+              }
+
+        test_case_02 = {
+            "Rodney": {
+              "total_points": 2,
+              "entries": {
+                "words": ["hat", "ton", "ton", "than", "sad", "sad", "sat", "vat", "tan", "tan"],
+                "points": [0, 0, 0, 0, 1, 1, 0, 0, 0, 0 ],
+                "numbers": ["0,5,4", "4,8,9", "4,8,13", "4,0,5,9", "2,5,1", "2,5,6", "7,10,14", "15,10,14", "14,10,9", "14,10,13"]
+              }
+            },
+            "Paula": {
+              "total_points": 1,
+              "entries": {
+                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "tan", "tan", "van"],
+                "points": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ],
+                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "14,10,9", "14,10,13", "15,10,9"]
+              }
+            },
+            "johnf": {
+              "total_points": 1,
+              "entries": {
+                "words": ["tad", "hat"],
+                "points": [1, 0 ],
+                "numbers": ["4,5,6", "0,5,4"]
+              }
+            },
+            "RUBEUS": {
+              "total_points": 8,
+              "entries": {
+                "words": ["sat", "sands", "sand", "hand", "hands", "hands", "tan", "tan", "tan", "ton", "ton"],
+                "points": [0, 2, 1, 1, 2, 2, 0, 0, 0, 0, 0 ],
+                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,7", "0,5,9,6,2", "14,10,13", "14,10,9", "4,5,9", "4,8,9", "4,8,13"]
+              }
+            },
+            "Mark": {
+              "total_points": 0,
+              "entries": {
+                "words": ["not"],
+                "points": [0 ],
+                "numbers": ["9,8,4"]
+              }
+            },
+            "Rache": {
+              "total_points": 3,
+              "entries": {
+                "words": ["tan", "tan", "van", "van", "sat", "has", "hat", "had", "hast"],
+                "points": [0, 0, 0, 0, 0, 1, 0, 1, 1 ],
+                "numbers": ["14,10,9", "14,10,13", "15,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
+              }
+            },
+            "Kendall": {
+              "total_points": 5,
+              "entries": {
+                "words": ["dad", "dads", "dads", "ant", "not", "not", "nor", "sat", "vat", "van", "van", "hat", "toad"],
+                "points": [0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1 ],
+                "numbers": ["1,5,6", "1,5,6,2", "1,5,6,7", "5,9,4", "13,8,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,13", "15,10,9", "0,5,4", "4,8,5,6"]
+              }
+            }
+          }
+
+        self.assertEqual(test_case_02, br02.get_players_final_scores())
