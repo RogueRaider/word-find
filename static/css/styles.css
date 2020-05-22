@@ -96,6 +96,22 @@ form {
   text-align: center;
 }
 
+.dot_green {
+  height: 25px;
+  width: 25px;
+  background-color: #52f408;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+.dot_red {
+  height: 25px;
+  width: 25px;
+  background-color: #f40808;
+  border-radius: 50%;
+  display: inline-block;
+}
+
 
 @media screen and (min-width: 365px) {
   #boggle_board input {

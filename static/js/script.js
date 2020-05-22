@@ -217,7 +217,12 @@ function room_update (room_data) {
   room = room_data;
   var table_rows;
   for (var i = room_data.players.length - 1; i >= 0; i--) {
-    var row = '<tr><td>' + room_data.players[i].username + '</td><td>' + room_data.players[i].connected + '</td></tr>';
+    if (room_data.players[i].connected) {
+      var status = '<span class="dot_green"></span>';
+    } else {
+      var status = '<span class="dot_red"></span>';
+    }
+    var row = '<tr><td>' + room_data.players[i].username + '</td><td>' + status + '</td></tr>';
     table_rows += row;
   }
   $('#players_in_room').html(table_rows)
