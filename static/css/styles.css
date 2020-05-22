@@ -7,15 +7,13 @@ form {
   text-align: center;
 }
 
-#boggle_board {
-  margin: 5px;
-}
 
 #boggle_board input {
-  height: 85px;
-  font-size: xx-large;
-  width: 85px;
+  height: 70px;
+  font-size: x-large;
+  width: 70px;
   touch-action: manipulation;
+  text-align: center;
 }
 
 #working_entry {
@@ -65,7 +63,7 @@ form {
 .container-fluid {
   margin-right: auto;
   margin-left: auto;
-  max-width: 400px; /* or 950px */
+  max-width: 400px;
 }
 
 .selected_input {
@@ -96,4 +94,15 @@ form {
 
 .word_points {
   text-align: center;
+}
+
+
+@media screen and (min-width: 365px) {
+  #boggle_board input {
+    height: 85px;
+    font-size: xx-large;
+    width: 85px;
+    touch-action: manipulation;
+    text-align: center;
+  }
 }
