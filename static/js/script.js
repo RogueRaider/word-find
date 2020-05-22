@@ -8,6 +8,7 @@ const parseCookie = str =>
     }, {});
 
 var game;
+var room;
 var player;
 var game_message_handler;
 var working_entry = [];
@@ -59,6 +60,10 @@ socket.on('game_update', function (data) {
   game_update(data.game);
 });
 
+socket.on('room_update', function (data) {
+  room_update(data.room);
+})
+
 socket.on('game_results', function (data) {
   console.log('received game results');
   console.log(data);
@@ -98,7 +103,8 @@ function b_submit () {
     entry_reset("Accepted '" + submitted_word + "'");
     socket.emit('submit_word', {
       'entry_word' : submitted_word,
-      'entry_number' : stringed_working
+      'entry_number' : stringed_working,
+      'username' : player.username
       }
     );
   } else {
@@ -203,6 +209,18 @@ function player_update (player_data) {
   $("#b_username").text(player_data.username);
   $('#submitted_words').empty();
   $('#submitted_words').html(table_rows);
+}
+
+function room_update (room_data) {
+  console.log('updating room');
+  console.log(room_data);
+  room = room_data;
+  var table_rows;
+  for (var i = room_data.players.length - 1; i >= 0; i--) {
+    var row = '<tr><td>' + room_data.players[i].username + '</td><td>' + room_data.players[i].connected + '</td></tr>';
+    table_rows += row;
+  }
+  $('#players_in_room').html(table_rows)
 }
 
 function game_update (game_data) {

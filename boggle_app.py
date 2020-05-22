@@ -36,12 +36,6 @@ def game_hub():
         logger.debug(f"Creating room {p_room_name}")
         server_game_rooms.active_rooms.append(boggle_room(p_room_name))
 
-    boggle_r = server_game_rooms.get_room(p_room_name, boggle_room)
-
-    if boggle_r.is_player_active(p_username):
-        logger.info(f"Player {p_username} is reconnecting to session for {p_room_name}")
-    else:
-        logger.info(f"Player {p_username} is joining session for {p_room_name}")
     resp = make_response(render_template('game_hub.html', room_name=p_room_name))
     resp.set_cookie("username", p_username)
     resp.set_cookie("room", p_room_name)
@@ -56,12 +50,19 @@ def disconnect_housekeepting():
     logger.debug(f'disconnect detected from {request.sid}')
     for x, room in enumerate(server_game_rooms.active_rooms):
         for y, player in enumerate(room.players):
-            if player.sid == request.sid: # and check that game isn't running
-                logger.info(f'Removing {player.username} from {room.name}')
-                del room.players[y]
+            logger.debug(f'Room state {room.state}')
+            if player.sid == request.sid:
+                if room.state == 'running':
+                    logger.info(f'Marking player {player.username} in  {room.name} as not connected')
+                    player.connected = False
+                if room.state == 'waiting':
+                    logger.info(f'Removing {player.username} from {room.name}')
+                    del room.players[y]
         if len(room.players) == 0:
             logger.info(f'Removing empty room {room.name}')
             del server_game_rooms.active_rooms[x]
+        else:
+            send_room_update(room)
 
 
 @socketio.on('entering_room')
@@ -81,14 +82,18 @@ def enter_room(data):
     if not boggle_r.is_player_active(p_username):
         logger.debug(f'Creating new player "{p_username}"')
         boggle_r.players.append(player(p_username))
+    else:
+        logger.info(f"Player {p_username} is reconnecting to game {p_room_name}")
 
     player_selected = boggle_r.get_player(p_username)
+    player_selected.connected = True
     player_selected.sid = request.sid
     logger.debug(f'Updated {player_selected.username} with sid {request.sid}')
     logger.debug(f'Game state {boggle_r.state} game board {boggle_r.board}')
     emit('player_update', {
         'player': player_selected.__dict__
         })
+    send_room_update(boggle_r)
     send_game_update(boggle_r, player_selected.sid)
 
 
@@ -126,9 +131,13 @@ def process_word(word):
         boggle_r = server_game_rooms.get_room(p_room_name, boggle_room)
     else:
         logger.error(f"Could not find instance of room '{p_room_name}' to submit word")
+        emit('room_closed')
         return
-    # not sure if this will work well
+
     player_selected = boggle_r.get_player_by_sid(p_sid)
+    if player_selected is None:
+        emit('room_closed')
+        return
     player_selected.entries['numbers'].append(word['entry_number'])
     player_selected.entries['words'].append(word['entry_word'])
     word_points = boggle_r.scoring_matrix[len(word['entry_word'])]
@@ -161,19 +170,23 @@ def run_game(game_room):
     logger.debug(f'Sending game results {game_results}')
     socketio.emit('game_results', game_results, room=game_room.name)
     # reset game
-    for player in game_room.players:
-        player.entries = {
-            'words': [],
-            'numbers': [],
-            'points': []
-        }
+    for i, player in enumerate(game_room.players):
+        if player.connected:
+            player.entries = {
+                'words': [],
+                'numbers': [],
+                'points': []
+            }
+        else:
+            logger.debug(f'Removing disconnected player {player.username}')
+            del game_room.players[i]
+
     game_room.board = game_room.blank_board
     game_room.state = 'waiting'
     game_room.seconds_remaining = 0
     logger.debug(f'Sending reset game room')
+    send_room_update(game_room)
     send_game_update(game_room)
-
-
 
 def send_game_update(game_room, sid=None):
     if sid is not None:
@@ -198,6 +211,17 @@ def send_game_update(game_room, sid=None):
                 }
             },
             room=game_room.name)
+
+def send_room_update(game_room):
+    player_list = []
+    for player in game_room.players:
+        player_list.append({ 'username': player.username, 'connected': player.connected })
+    emit('room_update', {
+        'room' : {
+            'players' : player_list
+            }
+        },
+        room=game_room.name)
 
 if __name__ == '__main__':
     socketio.run(app, port=8000)

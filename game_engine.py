@@ -20,6 +20,7 @@ class player:
     def __init__(self, username):
         self.username = username
         self.sid = None
+        self.connected = True
         self.entries = {
             'words': [],
             'numbers': [],
