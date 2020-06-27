@@ -72,7 +72,7 @@ socket.on('game_results', function (data) {
     var p = data[player];
     results_table += '<tr class="result_section"><td>' + player + '</td><td>' + p.total_points + '</td></tr>'
     for (var i = p.entries.words.length - 1; i >= 0; i--) {
-      var row = '<tr class="result_row"><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td><td>' + p.entries.numbers[i] + '</td></tr>';
+      var row = '<tr class="result_row"><td>' + p.entries.words[i] + '</td><td>' + p.entries.points[i] + '</td></tr>';
       results_table += row;
     }
   }
