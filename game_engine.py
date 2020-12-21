@@ -76,7 +76,7 @@ class boggle_room:
         winning_entries = []
         losing_entries = []
         for player in self.players:
-            for entry in player.entries['numbers']:
+            for entry in player.entries['words']:
                 # entry gets no points because it's duplicated
                 if entry in winning_entries: 
                     winning_entries.remove(entry)
@@ -93,8 +93,8 @@ class boggle_room:
             results[player.username]['entries']['words'] = []
             results[player.username]['entries']['points'] = []
             results[player.username]['entries']['numbers'] = []
-            for i in range(0, len(player.entries['numbers'])):
-                if player.entries['numbers'][i] in winning_entries:
+            for i in range(0, len(player.entries['words'])):
+                if player.entries['words'][i] in winning_entries:
                     results[player.username]['total_points'] += player.entries['points'][i]
                     results[player.username]['entries']['words'].append(player.entries['words'][i])
                     results[player.username]['entries']['points'].append(player.entries['points'][i])
@@ -103,7 +103,6 @@ class boggle_room:
                     results[player.username]['entries']['words'].append(player.entries['words'][i])
                     results[player.username]['entries']['points'].append(0)
                     results[player.username]['entries']['numbers'].append(player.entries['numbers'][i])
-                    
 
         return results
 

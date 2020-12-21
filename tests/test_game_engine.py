@@ -36,6 +36,7 @@ class TestBoggleRoomMethods(unittest.TestCase):
         self.assertEqual(16, len(br.board))
 
     def test_get_players_final_scores(self):
+        self.maxDiff = None
         br = boggle_room("test01")
         br.players.append(player("matthew"))
         br.players.append(player("rodney"))
@@ -45,9 +46,9 @@ class TestBoggleRoomMethods(unittest.TestCase):
         a = br.get_player("acacia")
 
         a.entries = {
-            'words': ['figs', 'figs', 'spaceship'],
-            'numbers': ['1,2,3,4', '1,3,4,2', '5,4,3,6,2,1,5,3,4'],
-            'points': [1, 1, 10]
+            'words': ['figs', 'spaceship'],
+            'numbers': ['1,3,4,2', '5,4,3,6,2,1,5,3,4'],
+            'points': [1, 10]
         }
 
         r.entries = {
@@ -65,11 +66,11 @@ class TestBoggleRoomMethods(unittest.TestCase):
         test_case_01 = {
                       'acacia': {
                         'entries': {
-                            'points': [0, 1, 10],
-                            'words': ['figs','figs','spaceship', ],
-                            'numbers': ['1,2,3,4', '1,3,4,2', '5,4,3,6,2,1,5,3,4']
+                            'points': [0, 10],
+                            'words': ['figs','spaceship', ],
+                            'numbers': ['1,3,4,2', '5,4,3,6,2,1,5,3,4']
                             },
-                        'total_points': 11
+                        'total_points': 10
                         },
                      'matthew': {
                         'entries': {
@@ -110,15 +111,15 @@ class TestBoggleRoomMethods(unittest.TestCase):
         Rachel = br02.get_player("Rache")
 
         Rodney.entries = {
-                "words": [ "hat", "ton", "ton", "than", "sad", "sad", "sat", "vat", "tan", "tan"],
-                "points": [ 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-                "numbers": ["0,5,4", "4,8,9", "4,8,13", "4,0,5,9", "2,5,1", "2,5,6", "7,10,14", "15,10,14", "14,10,9", "14,10,13"]
+                "words": [ "hat", "ton", "than", "sad", "sat", "vat", "tan"],
+                "points": [ 1, 1, 1, 1, 1, 1, 1],
+                "numbers": ["0,5,4", "4,8,13", "4,0,5,9", "2,5,6", "7,10,14", "15,10,14", "14,10,9"]
               }
  
         Paula.entries = {
-                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "tan", "tan", "van"],
-                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "14,10,9", "14,10,13", "15,10,9"]
+                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "van"],
+                "points": [1, 1, 1, 1, 1, 1, 1, 1],
+                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "15,10,9"]
               }
 
         JohnF.entries = {
@@ -128,9 +129,9 @@ class TestBoggleRoomMethods(unittest.TestCase):
               }
 
         Rubeus.entries = {
-                "words": ["sat", "sands", "sand", "hand", "hands", "hands", "tan", "tan", "tan", "ton", "ton"],
-                "points": [1, 2, 1, 1, 2, 2, 1, 1, 1, 1, 1 ],
-                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,7", "0,5,9,6,2", "14,10,13", "14,10,9", "4,5,9", "4,8,9", "4,8,13"]
+                "words": ["sat", "sands", "sand", "hand", "hands", "tan", "ton"],
+                "points": [1, 2, 1, 1, 2, 1, 1],
+                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,2", "14,10,13", "4,8,13"]
               }
 
         Mark.entries = {
@@ -140,32 +141,32 @@ class TestBoggleRoomMethods(unittest.TestCase):
               }
 
         Rachel.entries = {
-                "words": ["tan", "tan", "van", "van", "sat", "has", "hat", "had", "hast"],
-                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-                "numbers": ["14,10,9", "14,10,13", "15,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
+                "words": ["tan", "van", "sat", "has", "hat", "had", "hast"],
+                "points": [1, 1, 1, 1, 1, 1, 1],
+                "numbers": ["14,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
               }
 
         Kendall.entries = {
-                "words": ["dad", "dads", "dads", "ant", "not", "not", "nor", "sat", "vat", "van", "van", "hat", "toad"],
-                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 ],
-                "numbers": ["1,5,6", "1,5,6,2", "1,5,6,7", "5,9,4", "13,8,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,13", "15,10,9", "0,5,4", "4,8,5,6"]
+                "words": ["dad", "dads", "ant", "not", "nor", "sat", "vat", "van", "hat", "toad"],
+                "points": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+                "numbers": ["1,5,6", "1,5,6,7", "5,9,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,9", "0,5,4", "4,8,5,6"]
               }
 
         test_case_02 = {
             "Rodney": {
-              "total_points": 2,
+              "total_points": 1,
               "entries": {
-                "words": ["hat", "ton", "ton", "than", "sad", "sad", "sat", "vat", "tan", "tan"],
-                "points": [0, 0, 0, 0, 1, 1, 0, 0, 0, 0 ],
-                "numbers": ["0,5,4", "4,8,9", "4,8,13", "4,0,5,9", "2,5,1", "2,5,6", "7,10,14", "15,10,14", "14,10,9", "14,10,13"]
+                "words": ["hat", "ton", "than", "sad", "sat", "vat", "tan"],
+                "points": [0, 0, 0, 1, 0, 0, 0],
+                  "numbers": ["0,5,4", "4,8,13", "4,0,5,9", "2,5,6", "7,10,14", "15,10,14", "14,10,9"]
               }
             },
             "Paula": {
               "total_points": 1,
               "entries": {
-                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "tan", "tan", "van"],
-                "points": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0 ],
-                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "14,10,9", "14,10,13", "15,10,9"]
+                "words": ["sat", "hat", "dad", "dads", "adds", "than", "tan", "van"],
+                "points": [0, 0, 0, 0, 1, 0, 0, 0],
+                "numbers": ["2,5,4", "0,5,4", "1,5,6", "1,5,6,2", "5,1,6,7", "4,0,5,9", "4,5,9", "15,10,9"]
               }
             },
             "johnf": {
@@ -177,35 +178,35 @@ class TestBoggleRoomMethods(unittest.TestCase):
               }
             },
             "RUBEUS": {
-              "total_points": 8,
+              "total_points": 6,
               "entries": {
-                "words": ["sat", "sands", "sand", "hand", "hands", "hands", "tan", "tan", "tan", "ton", "ton"],
-                "points": [0, 2, 1, 1, 2, 2, 0, 0, 0, 0, 0 ],
-                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,7", "0,5,9,6,2", "14,10,13", "14,10,9", "4,5,9", "4,8,9", "4,8,13"]
+                "words": ["sat", "sands", "sand", "hand", "hands", "tan", "ton"],
+                "points": [0, 2, 1, 1, 2, 0, 0],
+                "numbers": ["2,5,4", "2,5,9,6,7", "2,5,9,6", "0,5,9,6", "0,5,9,6,2", "14,10,13", "4,8,13"]
               }
             },
             "Mark": {
               "total_points": 0,
               "entries": {
                 "words": ["not"],
-                "points": [0 ],
+                "points": [0],
                 "numbers": ["9,8,4"]
               }
             },
             "Rache": {
               "total_points": 3,
               "entries": {
-                "words": ["tan", "tan", "van", "van", "sat", "has", "hat", "had", "hast"],
-                "points": [0, 0, 0, 0, 0, 1, 0, 1, 1 ],
-                "numbers": ["14,10,9", "14,10,13", "15,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
+                "words": ["tan", "van", "sat", "has", "hat", "had", "hast"],
+                "points": [0, 0, 0, 1, 0, 1, 1 ],
+                "numbers": ["14,10,9", "15,10,13", "7,10,14", "0,5,2", "0,5,4", "0,5,6", "0,5,2,3"]
               }
             },
             "Kendall": {
-              "total_points": 5,
+              "total_points": 3,
               "entries": {
-                "words": ["dad", "dads", "dads", "ant", "not", "not", "nor", "sat", "vat", "van", "van", "hat", "toad"],
-                "points": [0, 0, 1, 1, 1, 0, 1, 0, 0, 0, 0, 0, 1 ],
-                "numbers": ["1,5,6", "1,5,6,2", "1,5,6,7", "5,9,4", "13,8,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,13", "15,10,9", "0,5,4", "4,8,5,6"]
+                  "words": ["dad", "dads", "ant", "not", "nor", "sat", "vat", "van", "hat", "toad"],
+                "points": [0, 0, 1, 0, 1, 0, 0, 0, 0, 1],
+                "numbers": ["1,5,6", "1,5,6,7", "5,9,4", "9,8,4", "9,8,12", "7,10,14", "15,10,14", "15,10,9", "0,5,4", "4,8,5,6"]
               }
             }
           }

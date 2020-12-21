@@ -89,8 +89,8 @@ socket.on('room_closed', function (data) {
 
 function b_submit () {
   var submitted_word = $("#working_entry").attr("value").toLowerCase();
-  var stringed_working = working_entry.toString()
-  if (player.entries.numbers.includes(stringed_working)) {
+  var stringed_working = working_entry.toString();
+  if (player.entries.words.includes(submitted_word)) {
     entry_reset("Already entered '" + submitted_word + "'");
     return;
   }
