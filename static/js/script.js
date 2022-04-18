@@ -253,9 +253,4 @@ function draw_board (board) {
   }
 }
 
-function update_submitted_words (words) {
-  for (var i = words.length - 1; i >= 0; i--) {
-    words[i]
-  }
-}
 
