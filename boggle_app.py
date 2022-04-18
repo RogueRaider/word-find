@@ -162,7 +162,7 @@ def run_game(game_room):
         game_room.seconds_remaining = round(end_time - time.time())
         logger.debug(f'Seconds remaining {game_room.seconds_remaining} for {game_room.name}')
         send_game_update(game_room)
-        time.sleep(1)
+        socketio.sleep(1)
         
     logger.debug(f'Sending last game update')
     send_game_update(game_room)
